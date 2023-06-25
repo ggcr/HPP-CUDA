@@ -5,9 +5,16 @@ __global__ void matrixMultiply(float * A, float * B, float * C,
 			       int numCRows, int numCColumns) 
 {
     //@@ Insert code to implement matrix multiplication here
+    int Row = blockIdx.y * blockDim.y + threadIdx.y;
+    int Col = blockIdx.x * blockDim.x + threadIdx.x;
 
     // Check boundaries
-	
+    if((Row < numCColumns) & (Col < numCRows)) {
+        float CValue = 0.0;
+        for(int i = 0; i < numARows; ++i) 
+            CValue += A[Row * numAColumns + i] * B[i * numBColumns + Col];
+        C[Row * numCColumns + Col] = CValue;
+    }
 }
 
 __host__ void hostMatrixMultiply(float * A, float * B, float * C,
@@ -18,7 +25,7 @@ __host__ void hostMatrixMultiply(float * A, float * B, float * C,
     for(int Row = 0; Row < numCRows; Row++) {
         for(int Col = 0; Col < numCColumns; Col++) {
             float sum = 0;
-            for(int i = 0; i < numCRows; i++) {
+            for(int i = 0; i < numARows; i++) {
                 float a = A[Row * numAColumns + i];
                 float b = B[i * numBColumns + Col];
                 sum += a * b;
@@ -84,8 +91,8 @@ int main(int argc, char ** argv) {
     //@@ Initialize the grid and block dimensions here
     // En DimGrid mete primero numCColumns y luego NumCRows...a
     // similar al m y n que metía en el ejemplo de la Pic...
-    dim3 DimGrid = (((numCColumns-1) / 16 + 1, (numCRows-1) / 16 + 1, 1);
-    dim3 DimBlock = (16, 16, 1);
+    dim3 DimGrid(((numCColumns-1) / 16 + 1, (numCRows-1) / 16 + 1, 1);
+    dim3 DimBlock(16, 16, 1);
 	
     //@@ Launch the GPU Kernel here
     matrixMultiply<<<DimGrid, DimBlock>>>(d_A, d_B, d_C,

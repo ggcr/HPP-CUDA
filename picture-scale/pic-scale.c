@@ -14,8 +14,8 @@ __host__ void PictureScale(float* h_Pin, int n, int m) {
 	// Copy h_Pin to d_Pin
 	cudaMemcpy(d_Pin, h_Pin, size, cudaMemcpyDeviceToHost);
 	// Kernel
-	dim3 DimGrid = ((n-1)/16 + 1, (m-1)/16 + 1, 1);
-	dim3 DimBlock = (16, 16, 1);
+	dim3 DimGrid((n-1)/16 + 1, (m-1)/16 + 1, 1);
+	dim3 DimBlock(16, 16, 1);
 	PictureKernel<<<DimGrid, DimBlock>>>(d_Pin, d_Pout, n, m);
 	// Free
 	cudaFree(d_Pin); cudaFree(d_Pout);
