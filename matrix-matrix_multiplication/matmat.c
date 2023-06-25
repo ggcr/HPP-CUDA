@@ -2,11 +2,30 @@
 __global__ void matrixMultiply(float * A, float * B, float * C,
 			       int numARows, int numAColumns,
 			       int numBRows, int numBColumns,
-			       int numCRows, int numCColumns) {
+			       int numCRows, int numCColumns) 
+{
     //@@ Insert code to implement matrix multiplication here
+
+    // Check boundaries
 	
-	// Check boundaries
-	
+}
+
+__host__ void hostMatrixMultiply(float * A, float * B, float * C,
+			       int numARows, int numAColumns,
+			       int numBRows, int numBColumns,
+			       int numCRows, int numCColumns) 
+{
+    for(int Row = 0; Row < numCRows; Row++) {
+        for(int Col = 0; Col < numCColumns; Col++) {
+            float sum = 0;
+            for(int i = 0; i < numCRows; i++) {
+                float a = A[Row * numAColumns + i];
+                float b = B[i * numBColumns + Col];
+                sum += a * b;
+            }
+            C[Row * numCColumns + Col] = sum;
+        }
+    }
 }
 
 int main(int argc, char ** argv) {
