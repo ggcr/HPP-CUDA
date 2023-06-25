@@ -11,7 +11,7 @@ __global__ void matrixMultiply(float * A, float * B, float * C,
     // Check boundaries
     if((Row < numCColumns) & (Col < numCRows)) {
         float CValue = 0.0;
-        for(int i = 0; i < numARows; ++i) 
+        for(int i = 0; i < numAColumns; ++i) 
             CValue += A[Row * numAColumns + i] * B[i * numBColumns + Col];
         C[Row * numCColumns + Col] = CValue;
     }
@@ -25,7 +25,7 @@ __host__ void hostMatrixMultiply(float * A, float * B, float * C,
     for(int Row = 0; Row < numCRows; Row++) {
         for(int Col = 0; Col < numCColumns; Col++) {
             float sum = 0;
-            for(int i = 0; i < numARows; i++) {
+            for(int i = 0; i < numAColumns; i++) {
                 float a = A[Row * numAColumns + i];
                 float b = B[i * numBColumns + Col];
                 sum += a * b;
